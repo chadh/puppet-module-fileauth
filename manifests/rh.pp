@@ -1,6 +1,6 @@
 class fileauth::rh {
   file { '/etc/passwd.M':
-    content => generate('/bin/cat', "/mnt/puppetfiles/passwd/$hostname.passwd"),
+    content => generate('/mnt/puppetfiles/scripts/cdbrepo.pl', "retrieve", "$hostname"),
     ensure => present,
     mode => 0400, owner => root, group => root,
     notify => Exec['mkcpasswd'],
@@ -14,6 +14,4 @@ class fileauth::rh {
     refreshonly => true,
     require => File['/etc/mkcpasswd.pl'],
   }
-    
-    
 }
