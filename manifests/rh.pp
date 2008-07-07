@@ -1,4 +1,10 @@
 class fileauth::server::rh {
+  cron { 'updatecdbrepo':
+    command => "/mnt/puppetfiles/scripts/cdbrepo.pl --update > /dev/null",
+    user => puppet,
+    minute => [ 0,15,30,45 ],
+  }
+
   file { '/var/lib/cdbrepo':
     ensure => directory,
     mode => 770, owner => root, group => puppet,
