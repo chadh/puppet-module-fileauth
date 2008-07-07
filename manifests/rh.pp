@@ -5,8 +5,7 @@ class fileauth::rh {
   }
 
   file { '/etc/passwd.M':
-    content => generate('/mnt/puppetfiles/scripts/cdbrepo.pl', "retrieve", "$hostname"),
-    ensure => present,
+    content => generate('/mnt/puppetfiles/scripts/cdbrepo.pl', "--retrieve", "$hostname"),
     mode => 0400, owner => root, group => root,
     notify => Exec['mkcpasswd'],
     require => File['/var/lib/cdbrepo'],
