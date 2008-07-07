@@ -19,6 +19,7 @@ my $merge_file = '/etc/passwd.M';
 my $MAGICUSER = "-xxxxxx";
 my $MAGICLINE = "-xxxxxx:x:0:0:WARNING...Everything after this line changed by mkcpasswd::";
 my $shadow_pwstr = "*K*";
+my $SQUASHLINE = "IGNORE";
 
 # Check for existence and writeability of above files
 # Open files for reading
@@ -28,6 +29,18 @@ my $pw_dir = dirname($pw_file);
 if ( ! -w abs_path($pw_dir) ) { die "Cannot write to $pw_dir." };
 if ( ! -r $pw_file ) { die "Cannot read passwd file ($pw_file)" };
 open(PWFILE,$pw_file) or die "Cannot open passwd file ($pw_file)";
+
+# First things first.  Check the .M file.  If it consist of a single special
+# line, then abort right now and leave the current passwd file in place.
+if ( ! -r $merge_file ) { die "Cannot read merge file ($merge_file)" };
+open(MERGEFILE,$merge_file) or die "Cannot open merge file ($merge_file)";
+my $firstline = <MERGEFILE>;
+close(MERGEFILE); 
+chomp($firstline);
+if ( $firstline eq $SQUASHLINE ) {
+  close(PWFILE);
+  exit 0;
+}
 
 my %pw_hash = ();
 my $localacct = 1;
