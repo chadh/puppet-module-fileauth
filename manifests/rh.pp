@@ -1,9 +1,11 @@
-class fileauth::rh {
+class fileauth::server::rh {
   file { '/var/lib/cdbrepo':
     ensure => directory,
     mode => 770, owner => root, group => puppet,
   }
+}
 
+class fileauth::client::rh {
   file { '/etc/passwd.M':
     content => generate('/mnt/puppetfiles/scripts/cdbrepo.pl', "--retrieve", "$hostname.passwd"),
     mode => 0400, owner => root, group => root,
