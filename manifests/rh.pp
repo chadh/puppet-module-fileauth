@@ -16,7 +16,6 @@ class fileauth::client::rh {
     content => generate('/mnt/puppetfiles/scripts/cdbrepo.pl', "--retrieve", "$hostname.passwd"),
     mode => 0400, owner => root, group => root,
     notify => Exec['mkcpasswd'],
-    require => File['/var/lib/cdbrepo'],
   }
 
   ccbp::remotefile{ '/etc/mkcpasswd.pl': modulename => 'fileauth', mode => 0700 }
@@ -32,7 +31,6 @@ class fileauth::client::rh {
     content => generate('/mnt/puppetfiles/scripts/cdbrepo.pl', "--retrieve", "ALL.group"),
     mode => 0400, owner => root, group => root,
     notify => Exec['mkcgroup'],
-    require => File['/var/lib/cdbrepo'],
   }
 
   ccbp::remotefile{ '/etc/mkcgroup.pl': modulename => 'fileauth', mode => 0700 }
