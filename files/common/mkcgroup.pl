@@ -175,7 +175,7 @@ my ($tmp_grp_fh, $tmp_grp_file) = tmpnam();
 my @sorted_grp_atl_list = sort { $a <=> $b } @grp_atl_list;
 #print @sorted_grp_atl_list;
 foreach my $line (@sorted_grp_atl_list) {
-  $line =~ s/^-?\d+##(.*)/$1/;
+  $line =~ s/^.*?##(.*)/$1/;
   print $tmp_grp_fh $line;
 }
 
@@ -183,7 +183,7 @@ print $tmp_grp_fh "$MAGICLINE\n";
 
 my @sorted_grp_btl_list =  sort { $a <=> $b } @grp_btl_list;
 foreach my $line (@sorted_grp_btl_list) {
-  $line =~ s/^\d+##(.*)/$1/;
+  $line =~ s/^.*?##(.*)/$1/;
   print $tmp_grp_fh $line;
 }
 close($tmp_grp_fh);
