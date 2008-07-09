@@ -3,6 +3,7 @@ class fileauth::server::rh {
     command => "/mnt/puppetfiles/scripts/cdbrepo.pl --update > /dev/null",
     user => puppet,
     minute => [ 0,15,30,45 ],
+    require => File['/var/lib/cdbrepo'],
   }
 
   file { '/var/lib/cdbrepo':
