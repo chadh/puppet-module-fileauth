@@ -1,6 +1,6 @@
 class fileauth::server::rh {
   cron { 'updatecdbrepo':
-    command => "/mnt/puppetfiles/scripts/cdbrepo.pl --update > /dev/null",
+    command => "/puppetfiles/scripts/cdbrepo.pl --update > /dev/null",
     user => puppet,
     minute => [ 0,15,30,45 ],
     require => File['/var/lib/cdbrepo'],
@@ -14,7 +14,7 @@ class fileauth::server::rh {
 
 class fileauth::client::rh {
   file { '/etc/passwd.M':
-    content => generate('/mnt/puppetfiles/scripts/cdbrepo.pl', "--retrieve", "$hostname.passwd"),
+    content => generate('/puppetfiles/scripts/cdbrepo.pl', "--retrieve", "$hostname.passwd"),
     mode => 0400, owner => root, group => root,
     notify => Exec['mkcpasswd'],
   }
@@ -29,7 +29,7 @@ class fileauth::client::rh {
   }
 
   file { '/etc/group.M':
-    content => generate('/mnt/puppetfiles/scripts/cdbrepo.pl', "--retrieve", "ALL.group"),
+    content => generate('/puppetfiles/scripts/cdbrepo.pl', "--retrieve", "ALL.group"),
     mode => 0400, owner => root, group => root,
     notify => Exec['mkcgroup'],
   }
