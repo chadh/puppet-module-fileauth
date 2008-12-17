@@ -14,7 +14,9 @@ open SELF, "< $0" or die "unable to open SELF";
 flock SELF, LOCK_EX | LOCK_NB or die "SELF Locked.  Previous process still running?";
 
 my $pw_file = '/etc/passwd';
+my $pw_mode = 0644;
 my $shadow_file = '/etc/shadow';
+my $shadow_mode = 0400;
 my $merge_file = '/etc/passwd.M';
 my $MAGICUSER = "-xxxxxx";
 my $MAGICLINE = "-xxxxxx:x:0:0:WARNING...Everything after this line changed by mkcpasswd::";
@@ -264,7 +266,9 @@ print $tmp_pw_fh sort @pw_btl_list;
 close($tmp_pw_fh);
 
 move($tmp_pw_file,$pw_file) or die "unable to rename $tmp_pw_file to $pw_file";
+chmod($pw_mode,$pw_file);
 move($tmp_shadow_file,$shadow_file) or die "unable to rename $tmp_shadow_file to $shadow_file";
+chmod($shadow_mode,$shadow_file);
 #print $tmp_shadow_fh sort @shadow_list;
 #print sort { $a =~ /[^:]*:[^:]*:(\d+)/ <=> $b =~ /[^:]*:[^:]*:(\d+)/ } @pw_atl_list;
 #print sort { $b =~ /^[^:]*:[^:]*:(\d+)/ <=> $a =~ /^[^:]*:[^:]*:(\d+)/ } @shadow_list;
