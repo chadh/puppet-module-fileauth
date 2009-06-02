@@ -6,6 +6,11 @@ class fileauth::server::rh {
     require => File['/var/lib/cdbrepo'],
   }
 
+  file { "$pm_filesystem/from_udb/cdb":
+    ensure => directory,
+    mode => 770, owner => root, group => puppet,
+  }
+
   file { '/var/lib/cdbrepo':
     ensure => directory,
     mode => 770, owner => root, group => puppet,
