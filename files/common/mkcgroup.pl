@@ -15,6 +15,7 @@ flock SELF, LOCK_EX | LOCK_NB or die "SELF Locked.  Previous process still runni
 
 my $group_file = '/etc/group';
 my $merge_file = '/etc/group.M';
+my $group_mode = 0644;
 my $MAGICUSER = "-xxxxxx";
 my $MAGICLINE = "-xxxxxx::0:";
 my $SQUASHLINE = "IGNORE";
@@ -189,7 +190,7 @@ foreach my $line (@sorted_grp_btl_list) {
 close($tmp_grp_fh);
 
 move($tmp_grp_file,$group_file) or die "unable to rename $tmp_grp_file to $group_file";
-chmod(0644, $group_file);
+chmod($group_mode, $group_file);
 #print $tmp_shadow_fh sort @shadow_list;
 #print sort { $a =~ /[^:]*:[^:]*:(\d+)/ <=> $b =~ /[^:]*:[^:]*:(\d+)/ } @grp_atl_list;
 # safely replace grp_file with grp_hash dump
