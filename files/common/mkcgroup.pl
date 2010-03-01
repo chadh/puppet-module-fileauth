@@ -189,6 +189,7 @@ foreach my $line (@sorted_grp_btl_list) {
 close($tmp_grp_fh);
 
 move($tmp_grp_file,$group_file) or die "unable to rename $tmp_grp_file to $group_file";
+chmod(0644, $group_file);
 #print $tmp_shadow_fh sort @shadow_list;
 #print sort { $a =~ /[^:]*:[^:]*:(\d+)/ <=> $b =~ /[^:]*:[^:]*:(\d+)/ } @grp_atl_list;
 # safely replace grp_file with grp_hash dump
