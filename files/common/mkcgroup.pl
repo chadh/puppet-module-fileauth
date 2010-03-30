@@ -108,7 +108,9 @@ while ( <MERGEFILE> ) {
   if ( exists $grp_hash{$groupname} ) {
     print STDERR "group $groupname already in grp_hash: ";
     if ( $grp_hash{$groupname}{localacct} ) {
-      print STDERR "local group - ignoring\n";
+      # this is a local group with some members specified in UDB.  We need to
+      # merge the members
+      $grp_hash{$groupname}{userlist} = join(',',$grp_hash{$groupname}{userlist},$userlist);
     } else {
       $grp_hash{$groupname}{passwd} = $pw;
       $grp_hash{$groupname}{gid} = $gid;
