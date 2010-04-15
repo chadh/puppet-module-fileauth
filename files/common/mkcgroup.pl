@@ -20,6 +20,24 @@ my $MAGICUSER = "-xxxxxx";
 my $MAGICLINE = "-xxxxxx::0:";
 my $SQUASHLINE = "IGNORE";
 
+sub uniquify {
+  my $str = $_[0];
+  my @seenstrs;
+
+  foreach my $fld ( split(/\s*,\s*/,$str) ) {
+    $fld =~ s/^\s+//;
+    $fld =~ s/\s+$//;
+    if ( $fld =~ /^$/ ) { next; }
+    my $cnt = grep(/^$fld$/,@seenstrs);
+    if ( $cnt > 0 ) {
+      next;
+    }
+
+    push(@seenstrs,$fld);
+  }
+  return join(',',@seenstrs);
+}
+
 # Check for existence and writeability of above files
 # Open files for reading
 # * Sanity check number of group entries above the magic line
@@ -76,11 +94,13 @@ while ( <GRPFILE> ) {
     # cool
   }
 
+  my $unique_userlist = uniquify($userlist);
+
   $grp_hash{$groupname} = {
       groupname => $groupname,
       passwd => $pw,
       gid => $gid,
-      userlist => $userlist,
+      userlist => $unique_userlist,
       localacct => $localacct,
       preserve => $localacct,
   };
@@ -108,15 +128,15 @@ while ( <MERGEFILE> ) {
   if ( exists $grp_hash{$groupname} ) {
     print STDERR "group $groupname already in grp_hash: ";
     if ( $grp_hash{$groupname}{localacct} ) {
-      # this is a local group with some members specified in UDB.  We need to
+      # this is a local group, possibly with some members specified in UDB.  We need to
       # merge the members
-      $grp_hash{$groupname}{userlist} = join(',',$grp_hash{$groupname}{userlist},$userlist);
+      my $localuserlist = $grp_hash{$groupname}{userlist};
+      $grp_hash{$groupname}{userlist} = uniquify(join(',',$localuserlist,$userlist));
     } else {
       $grp_hash{$groupname}{passwd} = $pw;
       $grp_hash{$groupname}{gid} = $gid;
-      $grp_hash{$groupname}{userlist} = $userlist;
+      $grp_hash{$groupname}{userlist} = uniquify($userlist);
       $grp_hash{$groupname}{preserve} = 1;
-      print STDERR "updating information\n";
     }
   } else {
     print STDERR "updating grp_hash with $groupname from merge file\n";
@@ -124,7 +144,7 @@ while ( <MERGEFILE> ) {
         groupname => $groupname,
         passwd => $pw,
         gid => $gid,
-        userlist => $userlist,
+        userlist => uniquify($userlist),
         localacct => 0,
         preserve => 1
     };
