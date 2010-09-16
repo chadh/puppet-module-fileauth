@@ -8,7 +8,7 @@ class fileauth::server::rh {
 
   file { "$pm_filesystem/from_udb/cdb":
     ensure => directory,
-    mode => 770, owner => root, group => puppet,
+    mode => 770, owner => puppet, group => puppet,
   }
 
   file { '/var/lib/cdbrepo':
